@@ -26,24 +26,16 @@ class S7_1200(Device):
         super().__init__(address, rack, slot)
 
     def write_digital_output(self, db_number: int, start_address: int, value: bytearray) -> None:
-        if len(value) > 1:
-            print(f"[Warning]: Size of value extended one digital output")
         self.write(snap7.types.Areas.PA, db_number, start_address, value)
     
     def read_digital_output(self, db_number: int, start_address: int, length: int=1) -> bool:
-        if length > 1:
-            print(f"[Warning]: Size of printed value extended one digital output")
         value = self.read(snap7.types.Areas.PA, db_number, start_address, length)
         return bool(value)
     
     def write_digital_input(self, db_number: int, start_address: int, value: bytearray) -> None:
-        if len(value) > 1:
-            print(f"[Warning]: Size of value extended one digital output")
         self.write(snap7.types.Areas.PE, db_number, start_address, value)
     
     def read_digital_input(self, db_number: int, start_address: int, length: int=1) -> bool:
-        if length > 1:
-            print(f"[Warning]: Size of printed value extended one digital output")
         value = self.read(snap7.types.Areas.PE, db_number, start_address, length)
         return bool(value)
     
