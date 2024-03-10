@@ -43,7 +43,7 @@ class Watering_db(Db):
         super().__init__(database, host, port, user, password)
         
     def create_state_table(self):
-        self.request(f"CREATE TABLE IF NOT EXISTS watering (id serial PRIMARY KEY, name varchar(100), state boolean);")
+        self.request(f"CREATE TABLE IF NOT EXISTS watering (name varchar(100) PRIMARY KEY, state boolean);")
             
         
     def add_state_element(self, name:str, initial_state: bool=False):
@@ -58,7 +58,9 @@ class Watering_db(Db):
         
     def get_states_list(self) -> list:
         return self.response(f"SELECT name,state FROM watering")
-        
+    
+    def clear_states(self) -> list:
+        return self.request(f"DROP TABLE watering")
     
 # db = Watering_db('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
 # db.create_state_table()

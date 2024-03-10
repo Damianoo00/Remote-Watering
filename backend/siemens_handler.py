@@ -1,6 +1,17 @@
 import snap7
 from snap7.util import *
 
+class MemoryWrapper:
+    def __init__(self, name:str, db_num: int, start_addr: int) -> None:
+        self.name = name
+        self.db_num = db_num
+        self.start_addr = start_addr
+        
+class DigitalMemoryWrapper(MemoryWrapper):
+    def __init__(self, name:str, db_num: int, start_addr: int, bit_num: int) -> None:
+        super().__init__(name, db_num, start_addr)
+        self.bit_num = bit_num
+
 class Device:
     def __init__(self, address: str, rack: int, slot: int) -> None:
         self.address = address
