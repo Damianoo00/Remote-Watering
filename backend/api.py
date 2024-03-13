@@ -30,7 +30,7 @@ def handle_options():
 def handle_digital_output():  
     if request.method == 'GET':
         states = db.get_states_list()
-        return {"value": json.dumps(states)}
+        return {"DQ1": int(states[0][1])}
     if request.method == 'POST':
         body = request.json 
         plc.write_digital_output(
@@ -48,11 +48,11 @@ def record_states():
     db.add_state_element(DQ3.name)
     while (True):
         try:
-            states = plc.read_digital_output(DQ1.db_num, DQ1.start_addr, 1)
+            states = plc.read_digital_output(DQ1.db_num, DQ1.start_addr, 3)
             states = states.to_bytes(3)
-            db.update_state_element(DQ1.name,states[DQ1.bit_num])
-            db.update_state_element(DQ2.name, states[DQ2.bit_num])
-            db.update_state_element(DQ3.name,states[DQ3.bit_num])
+            db.update_state_element('DQ1',states[0])
+            db.update_state_element('DQ2', states[1])
+            db.update_state_element('DQ3',states[2])
             print(db.get_states_list(), file=sys.stderr)
         except RuntimeError :
             print("device unrichable", file=sys.stderr)
