@@ -39,16 +39,16 @@ class S7_1200(Device):
     def write_digital_output(self, db_number: int, start_address: int, value: bytearray) -> None:
         self.write(snap7.types.Areas.PA, db_number, start_address, value)
     
-    def read_digital_output(self, db_number: int, start_address: int, length: int=1) -> int:
+    def read_digital_output(self, db_number: int, start_address: int, length: int=1) -> bytearray:
         value = self.read(snap7.types.Areas.PA, db_number, start_address, length)
-        return int.from_bytes(value)
+        return value
     
     def write_digital_input(self, db_number: int, start_address: int, value: bytearray) -> None:
         self.write(snap7.types.Areas.PE, db_number, start_address, value)
     
-    def read_digital_input(self, db_number: int, start_address: int, length: int=1) -> int:
+    def read_digital_input(self, db_number: int, start_address: int, length: int=1) -> bytearray:
         value = self.read(snap7.types.Areas.PE, db_number, start_address, length)
-        return int.from_bytes(value)
+        return value
     
 # plc = S7_1200('192.168.1.95', 0, 1)
 # plc.write_digital_output(0, 0, bytearray([0x01]))

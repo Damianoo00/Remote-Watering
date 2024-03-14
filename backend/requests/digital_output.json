@@ -1,9 +1,0 @@
-{
-    "method": "GET",
-    "ip_address": "192.168.1.95",
-    "rack_number": 0,
-    "port_number": 1,
-    "db_number": 0,
-    "start_address": 0,
-    "value": 0
-}

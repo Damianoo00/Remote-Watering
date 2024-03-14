@@ -1,0 +1,22 @@
+{
+    "programm": {
+        "id": "classic",
+        "steps": [
+            {
+                "name": "pole1",
+                "value": "100",
+                "time": "15m"
+            },
+            {
+                "name": "pole2",
+                "value": "010",
+                "time": "15m"
+            },
+            {
+                "name": "pole3",
+                "value": "001",
+                "time": "15m"
+            }
+        ]
+    }
+}
