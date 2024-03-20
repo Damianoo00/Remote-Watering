@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 from siemens_handler import S7_1200
 import time
 from utils import bytearray2byteslist, byteslist2bytearray
+from db import ProgrammDB
 app = Flask(__name__)
 CORS(app)
 
@@ -62,4 +63,23 @@ def get_digital_output():
     app.logger.info(f"Read: db: [{db}] | start_addr: [{start_addr}] | curr_val: [{curr_val}]")
         
     return {"value": bytearray2byteslist(curr_val)}, 200
+
+@app.route("/api/programm", methods=["POST"])
+def setup_programm():
+    query_params = request.args.to_dict()
+    ip = str(query_params["ip"])
+    rack = int(query_params["rack"])
+    slot = int(query_params["slot"])
+    db = int(query_params["db"])
+    start_addr = int(query_params["start_addr"])
+        
+    programm = request.json
     
+    print(programm["programm"]["id"])
+    
+    db = ProgrammDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    # db.clear_tables()
+    db.create_table()
+    db.add_programm(programm["programm"])
+    
+    return "ok"

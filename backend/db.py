@@ -38,29 +38,42 @@ class Db:
     def bool2str(self, digit: bool) -> str:
         return "TRUE" if digit else "FALSE"
         
-class Watering_db(Db):
+    
+class ProgrammDB(Db):
     def __init__(self, database: str, host: str, port: int, user: str, password: str) -> None:
         super().__init__(database, host, port, user, password)
         
-    def create_state_table(self):
-        self.request(f"CREATE TABLE IF NOT EXISTS watering (name varchar(100) PRIMARY KEY, state boolean);")
-            
-        
-    def add_state_element(self, name:str, initial_state: bool=False):
-       self.request(f"INSERT INTO watering (name, state) VALUES  ('{name}', {self.bool2str(initial_state)})")
-        
-    def update_state_element(self, name:str, state:bool):
-        self.request(f"UPDATE watering SET state={self.bool2str(state)} WHERE name='{name}'")
-        
-    def get_state_of_element(self, name:str) -> bool:
-        return self.response(f"SELECT name,state FROM watering WHERE name='{name}'")[0][1]
-        
-        
-    def get_states_list(self) -> list:
-        return self.response(f"SELECT name,state FROM watering")
+    def create_table(self):
+        self.request(f"CREATE TABLE IF NOT EXISTS programm ( id SERIAL PRIMARY KEY,  programm_id varchar(100), step_id varchar(100));")
+        self.request(f"CREATE TABLE IF NOT EXISTS step ( id SERIAL PRIMARY KEY, step_id varchar(100), value varchar(100), time integer);")
     
-    def clear_states(self) -> list:
-        return self.request(f"DROP TABLE watering")
+    def add_programm(self, programm: dict):    
+        for step in programm["steps"]:
+            self.request(f"INSERT INTO programm (programm_id, step_id) VALUES  ('{str(programm['id'])}', '{str(step['name'])}')")
+            self.request(f"INSERT INTO step (step_id, value, time) VALUES  ('{str(step['name'])}', '{str(step['value'])}', {str(step['time'])})")
+            
+    def clear_tables(self) -> list:
+        return self.request(f"DROP TABLE programm") or self.request(f"DROP TABLE step")
+    
+class CounterDB(Db):
+    def __init__(self, database: str, host: str, port: int, user: str, password: str) -> None:
+        super().__init__(database, host, port, user, password)
+        
+    def create_table(self):
+         self.request(f"CREATE TABLE IF NOT EXISTS counter ( name varchar(100) PRIMARY KEY,  time integer );")
+         
+    def add_clock(self, name, time):
+        self.request(f"INSERT INTO counter (name, time) VALUES  ( {str(name)}, {str(time)} )")
+        
+    def add_clock(self, name, time):
+        self.request(f"UPDATE counter SET time={str(time)} WHERE time={str(name)} )")
+        
+    def delete_clock(self, name):
+        self.request(f"DELETE FROM counter WHERE  name={str(name)}")
+        
+    def clear_tables(self) -> list:
+        return self.request(f"DROP TABLE counter")
+    
     
 # db = Watering_db('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
 # db.create_state_table()
