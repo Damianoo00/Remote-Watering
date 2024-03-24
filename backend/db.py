@@ -52,8 +52,24 @@ class ProgrammDB(Db):
             self.request(f"INSERT INTO programm (programm_id, step_id) VALUES  ('{str(programm['id'])}', '{str(step['name'])}')")
             self.request(f"INSERT INTO step (step_id, value, time) VALUES  ('{str(step['name'])}', '{str(step['value'])}', {str(step['time'])})")
             
+    def get_steps_ids(self, programm_id):
+        res = self.response(f"SELECT step_id FROM programm WHERE programm_id='{programm_id}'")
+        return res
+        
+    def get_steps_details(self, step_id):
+        res = self.response(f"SELECT value, time FROM step WHERE step_id='{step_id}'")
+        if not res:
+            return res
+        return res[0]
+    
     def clear_tables(self) -> list:
         return self.request(f"DROP TABLE programm") or self.request(f"DROP TABLE step")
+    
+    def delete_step(self, step_id):
+        self.request(f"DELETE FROM step WHERE step_id='{str(step_id)}'")
+        
+    def delete_programm(self, programm_id):
+        self.request(f"DELETE FROM programm WHERE programm_id='{str(programm_id)}'")
     
 class CounterDB(Db):
     def __init__(self, database: str, host: str, port: int, user: str, password: str) -> None:

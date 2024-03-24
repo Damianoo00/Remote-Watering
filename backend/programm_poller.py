@@ -1,23 +1,15 @@
 import time
 import requests
 
-url = 'http://127.0.0.1:5000/api/counter?name=step1'
-counter = 0
+url = 'http://127.0.0.1:5000/api/programm?ip=192.168.1.95&rack=0&slot=1&db=0&start_addr=0&programm_id=classic'
 
-while (requests.get(url=url).status_code == 200 and counter > -1):
+url_output = 'http://127.0.0.1:5000/api/digital/output?ip=192.168.1.95&rack=0&slot=1&db=0&start_addr=0&value='
+
+if (requests.get(url=url).status_code == 200):
     res = requests.get(url=url)
-    counter = res.json()["time"]
-    print(f"counter: [{counter}]")
-    time.sleep(1)
-    counter -= 1
-    if counter > -1:
-        obj = {
-            "time" : counter
-        }
-        res = requests.post(url=url, json=obj)
-        if res.status_code != 200:
-            print(f"Error: Status[{res.status_code}]")
-    else:
-        res = requests.delete(url=url)
-        if res.status_code != 200:
-            print(f"Error: Status[{res.status_code}]")
+    programm = res.json()
+    for step in programm:
+        print(f"Set [{step['value']}] [{step['time']}]")
+        requests.post(url=f"{url_output}{step['value']}")
+        time.sleep(step['time'])
+    requests.delete('http://127.0.0.1:5000/api/programm?ip=192.168.1.95&rack=0&slot=1&db=0&start_addr=0&programm_id=classic')

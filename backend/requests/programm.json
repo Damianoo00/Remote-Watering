@@ -4,17 +4,17 @@
         "steps": [
             {
                 "name": "pole1",
-                "value": "100",
+                "value": "1,0,0",
                 "time": "15"
             },
             {
                 "name": "pole2",
-                "value": "010",
+                "value": "0,1,0",
                 "time": "15"
             },
             {
                 "name": "pole3",
-                "value": "001",
+                "value": "0,0,1",
                 "time": "15"
             }
         ]

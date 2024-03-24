@@ -81,6 +81,48 @@ def setup_programm():
     db.add_programm(programm["programm"])
     return "ok", 200
 
+@app.route("/api/programm", methods=["GET"])
+def get_programm():
+    query_params = request.args.to_dict()
+    ip = str(query_params["ip"])
+    rack = int(query_params["rack"])
+    slot = int(query_params["slot"])
+    db = int(query_params["db"])
+    start_addr = int(query_params["start_addr"])
+    programm_id = str(query_params["programm_id"])
+    
+    db = ProgrammDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    db.create_table()
+    
+    programm = []
+    for step in db.get_steps_ids(programm_id):
+        step_id = step[0]
+        step_details = db.get_steps_details(step_id)
+        this_step = {}
+        this_step["value"] = step_details[0]
+        this_step["time"] = step_details[1]
+        programm.append(this_step)
+    return programm, 200
+
+@app.route("/api/programm", methods=["DELETE"])
+def delete_programm():
+    query_params = request.args.to_dict()
+    ip = str(query_params["ip"])
+    rack = int(query_params["rack"])
+    slot = int(query_params["slot"])
+    db = int(query_params["db"])
+    start_addr = int(query_params["start_addr"])
+    programm_id = str(query_params["programm_id"])
+    
+    db = ProgrammDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    db.create_table()
+    
+    for step in db.get_steps_ids(programm_id):
+        step_id = step[0]
+        db.delete_step(step_id)
+    db.delete_programm(programm_id)
+    return "Ok", 200
+
 @app.route("/api/counter", methods=["POST"])
 def set_couter():
     query_params = request.args.to_dict()
