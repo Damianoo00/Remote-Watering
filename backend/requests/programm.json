@@ -5,17 +5,17 @@
             {
                 "name": "pole1",
                 "value": "100",
-                "time": "15m"
+                "time": "15"
             },
             {
                 "name": "pole2",
                 "value": "010",
-                "time": "15m"
+                "time": "15"
             },
             {
                 "name": "pole3",
                 "value": "001",
-                "time": "15m"
+                "time": "15"
             }
         ]
     }

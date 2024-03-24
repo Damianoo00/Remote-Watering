@@ -63,13 +63,19 @@ class CounterDB(Db):
          self.request(f"CREATE TABLE IF NOT EXISTS counter ( name varchar(100) PRIMARY KEY,  time integer );")
          
     def add_clock(self, name, time):
-        self.request(f"INSERT INTO counter (name, time) VALUES  ( {str(name)}, {str(time)} )")
+        self.request(f"INSERT INTO counter (name, time) VALUES  ( '{str(name)}', {str(time)} )")
         
-    def add_clock(self, name, time):
-        self.request(f"UPDATE counter SET time={str(time)} WHERE time={str(name)} )")
+    def update_clock(self, name, time):
+        self.request(f"UPDATE counter SET time={str(time)} WHERE name='{str(name)}'")
+        
+    def get_clock(self, name):
+        res = self.response(f"SELECT time from counter WHERE name='{str(name)}'")
+        if not res:
+            return res
+        return res[0][0]
         
     def delete_clock(self, name):
-        self.request(f"DELETE FROM counter WHERE  name={str(name)}")
+        self.request(f"DELETE FROM counter WHERE name='{str(name)}'")
         
     def clear_tables(self) -> list:
         return self.request(f"DROP TABLE counter")

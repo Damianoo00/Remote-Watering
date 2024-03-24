@@ -4,11 +4,9 @@ from flask_cors import CORS, cross_origin
 from siemens_handler import S7_1200
 import time
 from utils import bytearray2byteslist, byteslist2bytearray
-from db import ProgrammDB
+from db import ProgrammDB, CounterDB
 app = Flask(__name__)
 CORS(app)
-
-# db = Watering_db('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
 app.logger.setLevel("INFO")
          
         
@@ -81,5 +79,40 @@ def setup_programm():
     # db.clear_tables()
     db.create_table()
     db.add_programm(programm["programm"])
+    return "ok", 200
+
+@app.route("/api/counter", methods=["POST"])
+def set_couter():
+    query_params = request.args.to_dict()
+    name = str(query_params["name"])
+    obj = request.json
+    time = obj["time"]
     
-    return "ok"
+    db = CounterDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    db.create_table()
+    if db.get_clock(name):
+        db.update_clock(name, time)
+    else:
+        db.add_clock(name, time)
+    return "Ok", 200
+    
+
+@app.route("/api/counter", methods=["GET"])
+def get_couter():
+    query_params = request.args.to_dict()
+    name = str(query_params["name"])
+    
+    db = CounterDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    clk = db.get_clock(name)
+    return {"time" : clk}
+
+@app.route("/api/counter", methods=["DELETE"])
+def delate_couter():
+    query_params = request.args.to_dict()
+    name = str(query_params["name"])
+    print(name)
+    db = CounterDB('watering', 'localhost', 5432, 'gardener', 'kap_kap_kap')
+    db.delete_clock(name)
+    return "Ok", 200
+    
+    
